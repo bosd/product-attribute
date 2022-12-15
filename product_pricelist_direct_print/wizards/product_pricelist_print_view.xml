@@ -88,6 +88,11 @@
                     <page string="Summary">
                         <field name="summary" nolabel="1" />
                     </page>
+                    <page string="Export Options">
+                        <group>
+                            <field name="breakage_per_category" />
+                        </group>
+                    </page>
                 </notebook>
                 <footer>
                     <button

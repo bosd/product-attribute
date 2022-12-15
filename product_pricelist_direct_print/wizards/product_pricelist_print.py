@@ -75,7 +75,7 @@ class ProductPricelistPrint(models.TransientModel):
     lang = fields.Selection(
         _lang_get, string="Language", default=lambda self: self.env.user.lang
     )
-
+    show_product_images = fields.Boolean(string="Show product images")
     product_price = fields.Float(compute="_compute_product_price")
 
     @api.onchange("categ_ids")
