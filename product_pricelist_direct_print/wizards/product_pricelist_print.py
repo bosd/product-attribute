@@ -72,6 +72,7 @@ class ProductPricelistPrint(models.TransientModel):
         string="Selling date threshold",
         help="Filter only the products ordered since this date",
     )
+    show_product_images = fields.Boolean(string="Show product images")
 
     @api.depends("partner_ids")
     def _compute_partner_count(self):
