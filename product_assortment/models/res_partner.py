@@ -1,4 +1,5 @@
 # Copyright 2021 Tecnativa - Carlos Roca
+# Copyright 2021 Tecnativa - Carlos Dauden
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 from odoo import models
 
@@ -56,4 +57,5 @@ class ResPartner(models.Model):
         IrFilters = self.env["ir.filters"]
         if IrFilters.get_partner_domain_fields() & set(vals.keys()):
             self._update_partner_assortments()
+            IrFilters.clear_caches()
         return res
