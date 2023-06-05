@@ -1,7 +1,7 @@
 # Copyright 2021 Tecnativa - Carlos Roca
 # Copyright 2021 Tecnativa - Carlos Dauden
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
-from odoo import models
+from odoo import api, fields, models
 
 
 class ResPartner(models.Model):
@@ -38,13 +38,15 @@ class ResPartner(models.Model):
         # Using sudo to contemplate evaluation of domains with restricted fields
         self = self.sudo()
         assortments = self.env["ir.filters"].search([("is_assortment", "=", True)])
-        domain_dic = {a: a._get_eval_partner_domain() for a in assortments}
         for partner in self:
-            partner.applied_assortment_ids = assortments.filtered(
-                lambda a: partner in a.partner_ids
-                or domain_dic[a]
-                and partner.filtered_domain(domain_dic[a])
-            )
+            # Use ids instead of record to improve performance (Remove in next versions)
+            partner_assortment_ids = []
+            for assortment in assortments:
+                if partner in assortment.partner_ids or partner.filtered_domain(
+                    assortment._get_eval_partner_domain()
+                ):
+                    partner_assortment_ids.append(assortment.id)
+            partner.applied_assortment_ids = assortments.browse(partner_assortment_ids)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -57,5 +59,4 @@ class ResPartner(models.Model):
         IrFilters = self.env["ir.filters"]
         if IrFilters.get_partner_domain_fields() & set(vals.keys()):
             self._update_partner_assortments()
-            IrFilters.clear_caches()
         return res
