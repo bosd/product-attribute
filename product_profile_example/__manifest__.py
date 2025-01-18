@@ -5,7 +5,7 @@
     "license": "AGPL-3",
     "name": "Product Profile Example",
     "summary": "Product Profile Use Case",
-    "version": "12.0.1.0.0",
+    "version": "16.0.1.0.0",
     "author": "Akretion, Odoo Community Association (OCA)",
     "category": "product",
     "depends": ["product_profile", "purchase_stock", "point_of_sale", "mrp"],

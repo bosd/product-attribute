@@ -3,7 +3,7 @@
 
     <record id="profile_own" model="product.profile">
         <field name="name">My Own Type Saleable</field>
-        <field name="type">product</field>
+        <field name="detailed_type">product</field>
         <field name="sale_ok">True</field>
         <field name="purchase_ok">False</field>
         <field name="profile_default_categ_id" ref="product.product_category_all" />
@@ -19,7 +19,7 @@
 
     <record id="profile_complete" model="product.profile">
         <field name="name">Complete Profile</field>
-        <field name="type">product</field>
+        <field name="detailed_type">product</field>
         <field name="sale_ok">True</field>
         <field name="purchase_ok">True</field>
         <field name="profile_default_categ_id" ref="product.product_category_all" />
@@ -38,7 +38,7 @@
 
     <record id="profile_manuf" model="product.profile">
         <field name="name">Manufacturing TO</field>
-        <field name="type">product</field>
+        <field name="detailed_type">product</field>
         <field name="sale_ok">True</field>
         <field name="purchase_ok">False</field>
         <field name="profile_default_categ_id" ref="product.product_category_5" />
@@ -54,7 +54,7 @@
 
     <record id="profile_consu" model="product.profile">
         <field name="name">Consumable</field>
-        <field name="type">consu</field>
+        <field name="detailed_type">consu</field>
         <field name="sale_ok">True</field>
         <field name="purchase_ok">False</field>
         <field name="profile_default_categ_id" ref="product.product_category_all" />

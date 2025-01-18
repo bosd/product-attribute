@@ -7,7 +7,10 @@ from odoo import fields, models
 class ProductProfile(models.Model):
     _inherit = "product.profile"
 
-    type = fields.Selection(selection_add=[("product", "Stockable Product")])
+    detailed_type = fields.Selection(
+        selection_add=[("product", "Stockable Product")],
+        ondelete={"product": "set default"},
+    )
 
     sale_ok = fields.Boolean(
         string="Can be Sold",
