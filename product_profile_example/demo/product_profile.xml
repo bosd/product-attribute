@@ -8,11 +8,7 @@
         <field name="purchase_ok">False</field>
         <field name="profile_default_categ_id" ref="product.product_category_all" />
         <field name="available_in_pos">True</field>
-        <field
-            name="profile_default_route_ids"
-            eval="[(6, 0, [ref('purchase_stock.route_warehouse0_buy')])]"
-        />
-        <field name="explanation">- My own type
+        <field name="explanation">My own type
 - Saleable product
 - Not purchasable</field>
     </record>
@@ -24,16 +20,11 @@
         <field name="purchase_ok">True</field>
         <field name="profile_default_categ_id" ref="product.product_category_all" />
         <field name="available_in_pos">True</field>
-        <field
-            name="profile_default_route_ids"
-            eval="[(6, 0, [ref('mrp.route_warehouse0_manufacture'),ref('stock.route_warehouse0_mto'),ref('purchase_stock.route_warehouse0_buy')])]"
-        />
-        <field name="explanation">- Stockable product
+        <field name="explanation">Stockable product
 - Saleable
 - Purchasable
 - Available in POS
-- MTO
-- Manufacturable</field>
+</field>
     </record>
 
     <record id="profile_manuf" model="product.profile">
@@ -43,11 +34,7 @@
         <field name="purchase_ok">False</field>
         <field name="profile_default_categ_id" ref="product.product_category_5" />
         <field name="available_in_pos">True</field>
-        <field
-            name="profile_default_route_ids"
-            eval="[(6, 0, [ref('mrp.route_warehouse0_manufacture'),ref('stock.route_warehouse0_mto')])]"
-        />
-        <field name="explanation">- Manufacturing Product
+        <field name="explanation">Manufacturing Product
 - Make to order product
 - Display on POS</field>
     </record>

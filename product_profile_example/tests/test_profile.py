@@ -30,7 +30,6 @@ class TestProductProfile(TransactionCase):
         }
         self.profile_own_defaults = {
             "categ_id": self.env.ref("product.product_category_all"),
-            "route_ids": self.env.ref("purchase_stock.route_warehouse0_buy"),
         }
         self.profile_complete = self.env.ref("product_profile_example.profile_complete")
         self.profile_complete_nondefaults = {
@@ -41,24 +40,10 @@ class TestProductProfile(TransactionCase):
         }
         self.profile_complete_defaults = {
             "categ_id": self.env.ref("product.product_category_all"),
-            "route_ids": [
-                self.env.ref("mrp.route_warehouse0_manufacture")
-                + self.env.ref("stock.route_warehouse0_mto")
-                + self.env.ref("purchase_stock.route_warehouse0_buy")
-            ],
         }
         self.profile_manuf = self.env.ref("product_profile_example.profile_manuf")
 
     def test_check_desk_combination_product(self):
-        # check route_ids
-        real_routes = [x.id for x in self.desk_combination_prd.route_ids]
-        theoritical_routes = [
-            self.env.ref("mrp.route_warehouse0_manufacture").id,
-            self.env.ref("stock.route_warehouse0_mto").id,
-        ]
-        real_routes.sort()
-        theoritical_routes.sort()
-        self.assertEqual(real_routes, theoritical_routes)
         # check categ_id
         theoritical_categ_id = self.theoritical_categ_id
         self.assertEqual(self.desk_combination_prd.categ_id.id, theoritical_categ_id.id)
@@ -181,9 +166,7 @@ class TestProductProfile(TransactionCase):
     def test_product_tmpl_fields_view_get(self):
         # test search filters loaded
         view_id = self.env.ref("product.product_template_search_view").id
-        res = self.desk_combination_prd.fields_view_get(
-            view_id=view_id, view_type="search"
-        )
+        res = self.desk_combination_prd.get_view(view_id=view_id, view_type="search")
         self.assertTrue(
             b'string="My Own Type Saleable"' in res["arch"],
             'string="My Own Type Saleable" must be in ' "fields_view_get() output",
