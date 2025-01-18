@@ -15,9 +15,7 @@ class TestProductProfile(TransactionCase):
         self.prd_m = self.env["product.product"]
         # misc
         self.desk_combination_prd = self.env.ref("product.product_product_3")
-        self.analysis_tmpl = self.env.ref(
-            "product.expense_hotel_product_template"
-        )
+        self.analysis_tmpl = self.env.ref("product.expense_hotel_product_template")
         self.analysis_prd = self.env.ref("product.expense_hotel")
         self.theoritical_categ_id = self.env.ref("product.product_category_5")
         self.categ = self.env.ref("product.product_category_3")
@@ -34,9 +32,7 @@ class TestProductProfile(TransactionCase):
             "categ_id": self.env.ref("product.product_category_all"),
             "route_ids": self.env.ref("purchase_stock.route_warehouse0_buy"),
         }
-        self.profile_complete = self.env.ref(
-            "product_profile_example.profile_complete"
-        )
+        self.profile_complete = self.env.ref("product_profile_example.profile_complete")
         self.profile_complete_nondefaults = {
             "type": "product",
             "sale_ok": True,
@@ -51,9 +47,7 @@ class TestProductProfile(TransactionCase):
                 + self.env.ref("purchase_stock.route_warehouse0_buy")
             ],
         }
-        self.profile_manuf = self.env.ref(
-            "product_profile_example.profile_manuf"
-        )
+        self.profile_manuf = self.env.ref("product_profile_example.profile_manuf")
 
     def test_check_desk_combination_product(self):
         # check route_ids
@@ -67,9 +61,7 @@ class TestProductProfile(TransactionCase):
         self.assertEqual(real_routes, theoritical_routes)
         # check categ_id
         theoritical_categ_id = self.theoritical_categ_id
-        self.assertEqual(
-            self.desk_combination_prd.categ_id.id, theoritical_categ_id.id
-        )
+        self.assertEqual(self.desk_combination_prd.categ_id.id, theoritical_categ_id.id)
 
     def test_on_create_template_with_profile(self):
         """Creating a product with a profile applies all the profile's values"""
@@ -80,13 +72,9 @@ class TestProductProfile(TransactionCase):
         self.assertEqual(len(count_tmpl), 1)
         # test all values from profile are applied
         for key in self.profile_own_nondefaults:
-            self.assertEqual(
-                self.profile_own_nondefaults[key], getattr(new_tmpl, key)
-            )
+            self.assertEqual(self.profile_own_nondefaults[key], getattr(new_tmpl, key))
         for key in self.profile_own_defaults:
-            self.assertEqual(
-                self.profile_own_defaults[key], getattr(new_tmpl, key)
-            )
+            self.assertEqual(self.profile_own_defaults[key], getattr(new_tmpl, key))
 
     def test_on_create_product_with_profile(self):
         """Creating a product with a profile applies all the profile's values"""
@@ -97,18 +85,14 @@ class TestProductProfile(TransactionCase):
         self.assertEqual(len(count_prd), 1)
         # test all values from profile are applied
         for key in self.profile_own_nondefaults:
-            self.assertEqual(
-                self.profile_own_nondefaults[key], getattr(new_prd, key)
-            )
+            self.assertEqual(self.profile_own_nondefaults[key], getattr(new_prd, key))
         for key in self.profile_own_defaults:
-            self.assertEqual(
-                self.profile_own_defaults[key], getattr(new_prd, key)
-            )
+            self.assertEqual(self.profile_own_defaults[key], getattr(new_prd, key))
 
     def test_on_set_tmpl_profile(self):
         """Test that setting a profile impacts:
-         - nondefaults in every case
-         - defaults only if there was no profile previously"""
+        - nondefaults in every case
+        - defaults only if there was no profile previously"""
 
         # set profile to "own"
         vals = {"profile_id": self.profile_own.id}
@@ -127,9 +111,7 @@ class TestProductProfile(TransactionCase):
 
         # get vals on the template
         defaults_keys = self.profile_own_defaults.keys()
-        defaults_tmpl_vals = {
-            key: self.analysis_tmpl[key] for key in defaults_keys
-        }
+        defaults_tmpl_vals = {key: self.analysis_tmpl[key] for key in defaults_keys}
 
         # set profile to "complete_prof"
         vals = {"profile_id": self.profile_complete.id}
@@ -141,14 +123,12 @@ class TestProductProfile(TransactionCase):
                 getattr(self.analysis_tmpl, key),
             )
         for key in self.profile_own_defaults:
-            self.assertEqual(
-                defaults_tmpl_vals[key], getattr(self.analysis_tmpl, key)
-            )
+            self.assertEqual(defaults_tmpl_vals[key], getattr(self.analysis_tmpl, key))
 
     def test_on_set_prd_profile(self):
         """Test that setting a profile impacts:
-         - nondefaults in every case
-         - defaults only if there was no profile previously"""
+        - nondefaults in every case
+        - defaults only if there was no profile previously"""
 
         # set profile to "own"
         vals = {"profile_id": self.profile_own.id}
@@ -166,9 +146,7 @@ class TestProductProfile(TransactionCase):
 
         # get vals on the products
         defaults_keys = self.profile_own_defaults.keys()
-        defaults_prd_vals = {
-            key: self.analysis_tmpl[key] for key in defaults_keys
-        }
+        defaults_prd_vals = {key: self.analysis_tmpl[key] for key in defaults_keys}
 
         # set profile to "complete_prof"
         vals = {"profile_id": self.profile_own.id}
@@ -180,9 +158,7 @@ class TestProductProfile(TransactionCase):
                 getattr(self.analysis_prd, key),
             )
         for key in self.profile_complete_defaults:
-            self.assertEqual(
-                defaults_prd_vals[key], getattr(self.analysis_prd, key)
-            )
+            self.assertEqual(defaults_prd_vals[key], getattr(self.analysis_prd, key))
 
     def test_on_write_profile_nondefaults(self):
         """Writing on non-default profile fields should propagate
@@ -210,6 +186,5 @@ class TestProductProfile(TransactionCase):
         )
         self.assertTrue(
             b'string="My Own Type Saleable"' in res["arch"],
-            'string="My Own Type Saleable" must be in '
-            "fields_view_get() output",
+            'string="My Own Type Saleable" must be in ' "fields_view_get() output",
         )
