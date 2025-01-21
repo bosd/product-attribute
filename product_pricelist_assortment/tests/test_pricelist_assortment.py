@@ -3,13 +3,16 @@
 
 from uuid import uuid4
 
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import tagged
+
+from odoo.addons.base.tests.common import BaseCommon
 
 
-class TestPricelistAssortment(SavepointCase):
+@tagged("post_install", "-at_install")
+class TestPricelistAssortment(BaseCommon):
     @classmethod
     def setUpClass(cls):
-        super(TestPricelistAssortment, cls).setUpClass()
+        super().setUpClass()
         cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
         cls.Pricelist = cls.env["product.pricelist"]
         cls.PricelistItem = cls.env["product.pricelist.assortment.item"]
@@ -123,14 +126,15 @@ class TestPricelistAssortment(SavepointCase):
         )
         self.assertTrue(bool(products_assortment))
         for product in products_assortment:
+            product.flush_recordset()
             self.assertAlmostEqual(
-                product.price, self.assortment_price, places=self.precision
+                product.list_price, self.assortment_price, places=self.precision
             )
         normal_product = self.Product.search(
             [("id", "not in", self.products_assortment.ids)], limit=1
         ).with_context(pricelist=pricelist.id)
         self.assertAlmostEqual(
-            normal_product.price, self.normal_price, places=self.precision
+            normal_product.lst_price, self.normal_price, places=self.precision
         )
 
     def test_pricelist_assortment(self):
@@ -158,7 +162,7 @@ class TestPricelistAssortment(SavepointCase):
         pricelist_values = self._get_pricelist_values()
         pricelist = self.Pricelist.create(pricelist_values)
         self._add_assortment_item_fixed_price(pricelist)
-        pricelist.flush()
+        pricelist.flush_recordset()
         self.env["product.pricelist"].cron_assortment_update()
         self._test_values(pricelist)
 
@@ -176,6 +180,6 @@ class TestPricelistAssortment(SavepointCase):
         pricelist_values = self._get_pricelist_values()
         pricelist = self.Pricelist.create(pricelist_values)
         self._add_assortment_item_fixed_price(pricelist)
-        pricelist.flush()
+        pricelist.flush_recordset()
         self.env["product.pricelist"].with_user(self.user_cmp2).cron_assortment_update()
         self._test_values(pricelist)

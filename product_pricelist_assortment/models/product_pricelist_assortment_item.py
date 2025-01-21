@@ -42,7 +42,7 @@ class ProductPricelistAssortmentItem(models.Model):
         products = self._get_product_from_assortment()
         list_values = []
         # fields to ignore to create pricelist item
-        blacklist = models.MAGIC_COLUMNS + [self.CONCURRENCY_CHECK_FIELD]
+        blacklist = models.MAGIC_COLUMNS
         blacklist.extend(["assortment_filter_id", "pricelist_item_ids"])
         default_values = {
             k: self._fields.get(k).convert_to_write(self[k], self)
