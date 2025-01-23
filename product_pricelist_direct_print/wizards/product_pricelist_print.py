@@ -305,28 +305,28 @@ class ProductPricelistPrint(models.TransientModel):
                 if item.applied_on == "2_product_category" and item.categ_id.parent_id:
                     items_dic["categ_ids"].append(item.categ_id.id)
             if items_dic["categ_ids"]:
-                aux_domain = expression.OR(
+                aux_domain = expression.AND(
                     [aux_domain, [("categ_id", "in", items_dic["categ_ids"])]]
                 )
             if items_dic["product_ids"]:
                 if self.show_variants:
-                    aux_domain = expression.OR(
+                    aux_domain = expression.AND(
                         [
                             aux_domain,
                             [("product_tmpl_id", "in", items_dic["product_ids"])],
                         ]
                     )
                 else:
-                    aux_domain = expression.OR(
+                    aux_domain = expression.AND(
                         [aux_domain, [("id", "in", items_dic["product_ids"])]]
                     )
             if items_dic["variant_ids"]:
                 if self.show_variants:
-                    aux_domain = expression.OR(
+                    aux_domain = expression.AND(
                         [aux_domain, [("id", "in", items_dic["variant_ids"])]]
                     )
                 else:
-                    aux_domain = expression.OR(
+                    aux_domain = expression.AND(
                         [
                             aux_domain,
                             [("product_variant_ids", "in", items_dic["variant_ids"])],
