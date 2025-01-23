@@ -1,1 +1,2 @@
+odoo-addon-product_assortment @ git+https://github.com/OCA/product-attribute.git@refs/pull/1823/head#subdirectory=product_assortment
 odoo_test_helper
