@@ -45,7 +45,7 @@ Usage
 
 To use this module, you need to:
 
-1. Enter the menu through Product Assortment Icon
+1. Enter the menu through the Product Assortment Icon
 2. Create a new filter where you can define your domain and add allowed
    and restricted products
 
@@ -71,6 +71,17 @@ Changelog
 -----------------------
 
 -  [16.0][MIG] product_assortment
+
+18.0.1.0.0 (2025-02-01)
+-----------------------
+
+-  [18.0][MIG] product_assortment
+-  Forward port demo data
+-  Forward port Only Show assortments to managers
+-  Forward port Fix All assortments are applied to original partner when
+   partner is duplicated
+-  Adjust domain code to new API behavior
+-  added test for combined black list and whitelisted product
 
 Bug Tracker
 ===========

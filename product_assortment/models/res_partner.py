@@ -42,9 +42,7 @@ class ResPartner(models.Model):
             # Use ids instead of record to improve performance (Remove in next versions)
             partner_assortment_ids = []
             for assortment in assortments:
-                if partner in assortment.partner_ids or partner.filtered_domain(
-                    assortment._get_eval_partner_domain()
-                ):
+                if partner in assortment.all_partner_ids:
                     partner_assortment_ids.append(assortment.id)
             partner.applied_assortment_ids = assortments.browse(partner_assortment_ids)
 
