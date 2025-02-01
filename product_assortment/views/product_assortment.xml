@@ -118,10 +118,7 @@
                             />
                         </group>
                     </group>
-                    <group
-                        invisible="context.get('default_partner_ids', False)"
-                        string="Partners to apply"
-                    >
+                    <group string="Partners to apply">
                         <field name="partner_ids" nolabel="1" colspan="2" />
                     </group>
                 </sheet>
