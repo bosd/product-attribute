@@ -37,7 +37,7 @@
                         <field
                             name="categ_ids"
                             widget="many2many_tags"
-                            inivisble="product_tmpl_ids or product_ids"
+                            invisible="product_tmpl_ids or product_ids"
                         />
                         <field
                             name="print_child_categories"
