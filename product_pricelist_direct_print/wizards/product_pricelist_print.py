@@ -52,6 +52,7 @@ class ProductPricelistPrint(models.TransientModel):
     show_standard_price = fields.Boolean(string="Show Cost Price")
     show_sale_price = fields.Boolean()
     show_pricelist_name = fields.Boolean(default=True)
+    show_description_sale = fields.Boolean(string="Show Sales Description")
     order_field = fields.Selection(
         [("name", "Name"), ("default_code", "Internal Reference")], string="Order"
     )

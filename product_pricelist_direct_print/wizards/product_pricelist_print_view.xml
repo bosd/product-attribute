@@ -33,6 +33,7 @@
                         <field name="max_categ_level" />
                     </group>
                     <group string="Product Options">
+                        <field name="show_description_sale" />
                         <field
                             name="categ_ids"
                             widget="many2many_tags"
