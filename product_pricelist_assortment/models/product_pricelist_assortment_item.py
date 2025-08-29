@@ -41,16 +41,33 @@ class ProductPricelistAssortmentItem(models.Model):
         self.ensure_one()
         products = self._get_product_from_assortment()
         list_values = []
-        # fields to ignore to create pricelist item
-        blacklist = models.MAGIC_COLUMNS
-        blacklist.extend(["assortment_filter_id", "pricelist_item_ids"])
-        default_values = {
-            k: self._fields.get(k).convert_to_write(self[k], self)
-            for k in self._fields.keys()
-            if k not in blacklist
-        }
+        # Whitelist of fields to copy from the assortment rule. This is safer
+        # than copying all fields and blacklisting some.
+        fields_to_copy = [
+            "min_quantity",
+            "compute_price",
+            "fixed_price",
+            "percent_price",
+            "price_surcharge",
+            "price_discount",
+            "price_round",
+            "price_min_margin",
+            "price_max_margin",
+            "base",
+            "base_pricelist_id",
+            "date_start",
+            "date_end",
+        ]
+        base_values = self.read(fields_to_copy)[0]
+        # The read method returns a tuple (id, name) for Many2one fields.
+        # We need to extract just the id for the create method.
+        if base_values.get("base_pricelist_id"):
+            base_values["base_pricelist_id"] = base_values["base_pricelist_id"][0]
+        # The 'id' of the assortment_item record should not be copied.
+        base_values.pop("id", None)
+
         for product in products:
-            values = default_values.copy()
+            values = base_values.copy()
             values.update(
                 {
                     "pricelist_id": self.pricelist_id.id,
