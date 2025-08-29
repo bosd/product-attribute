@@ -134,7 +134,7 @@ class TestPricelistAssortment(BaseCommon):
             [("id", "not in", self.products_assortment.ids)], limit=1
         ).with_context(pricelist=pricelist.id)
         self.assertAlmostEqual(
-            normal_product.lst_price, self.normal_price, places=self.precision
+            normal_product.list_price, self.normal_price, places=self.precision
         )
 
     def test_pricelist_assortment(self):
