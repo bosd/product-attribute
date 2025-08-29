@@ -126,16 +126,14 @@ class TestPricelistAssortment(BaseCommon):
         )
         self.assertTrue(bool(products_assortment))
         for product in products_assortment:
-            product.flush_recordset()
-            self.assertAlmostEqual(
-                product.list_price, self.assortment_price, places=self.precision
-            )
+            price = pricelist._get_product_price(product, 1.0)
+            self.assertAlmostEqual(price, self.assortment_price, places=self.precision)
+
         normal_product = self.Product.search(
             [("id", "not in", self.products_assortment.ids)], limit=1
-        ).with_context(pricelist=pricelist.id)
-        self.assertAlmostEqual(
-            normal_product.list_price, self.normal_price, places=self.precision
         )
+        price = pricelist._get_product_price(normal_product, 1.0)
+        self.assertAlmostEqual(price, self.normal_price, places=self.precision)
 
     def test_pricelist_assortment(self):
         """
