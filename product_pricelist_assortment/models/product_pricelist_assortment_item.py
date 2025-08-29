@@ -74,6 +74,7 @@ class ProductPricelistAssortmentItem(models.Model):
                     "assortment_item_id": self.id,
                     "applied_on": "0_product_variant",
                     "product_id": product.id,
+                    "product_tmpl_id": product.product_tmpl_id.id,
                 }
             )
             list_values.append(values)
