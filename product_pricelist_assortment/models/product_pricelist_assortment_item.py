@@ -1,0 +1,114 @@
+# Copyright 2021 ACSONE SA/NV (<http://acsone.eu>)
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+
+import logging
+
+from odoo import fields, models
+
+_logger = logging.getLogger(__name__)
+
+
+class ProductPricelistAssortmentItem(models.Model):
+    _name = "product.pricelist.assortment.item"
+    _description = "Product Pricelist Assortment Item"
+    _inherit = "product.pricelist.item"
+
+    assortment_filter_id = fields.Many2one(
+        comodel_name="ir.filters",
+        domain=[("is_assortment", "=", True)],
+        string="Assortment",
+        ondelete="restrict",
+        required=True,
+    )
+    pricelist_item_ids = fields.One2many(
+        comodel_name="product.pricelist.item",
+        inverse_name="assortment_item_id",
+        help="Pricelist items created automatically",
+    )
+
+    def _get_pricelist_item_name_price(self):
+        res = super()._get_pricelist_item_name_price()
+        for rec in self:
+            if rec.assortment_filter_id:
+                rec.name = rec.assortment_filter_id.name
+        return res
+
+    def _get_pricelist_item_values(self):
+        """
+        Get a list of values to create new product.pricelist.item
+        :return: list of dict
+        """
+        self.ensure_one()
+        products = self._get_product_from_assortment()
+        list_values = []
+        # Whitelist of fields to copy from the assortment rule. This is safer
+        # than copying all fields and blacklisting some.
+        fields_to_copy = [
+            "min_quantity",
+            "compute_price",
+            "fixed_price",
+            "percent_price",
+            "price_surcharge",
+            "price_discount",
+            "price_round",
+            "price_min_margin",
+            "price_max_margin",
+            "base",
+            "base_pricelist_id",
+            "date_start",
+            "date_end",
+        ]
+        base_values = self.read(fields_to_copy)[0]
+        # The read method returns a tuple (id, name) for Many2one fields.
+        # We need to extract just the id for the create method.
+        if base_values.get("base_pricelist_id"):
+            base_values["base_pricelist_id"] = base_values["base_pricelist_id"][0]
+        # The 'id' of the assortment_item record should not be copied.
+        base_values.pop("id", None)
+
+        for product in products:
+            values = base_values.copy()
+            values.update(
+                {
+                    "pricelist_id": self.pricelist_id.id,
+                    "assortment_item_id": self.id,
+                    "applied_on": "0_product_variant",
+                    "product_id": product.id,
+                    "product_tmpl_id": product.product_tmpl_id.id,
+                }
+            )
+            list_values.append(values)
+        return list_values
+
+    def _get_product_from_assortment(self):
+        domain = self.assortment_filter_id._get_eval_domain()
+        products = self.env[self.assortment_filter_id.model_id].search(domain)
+        return products
+
+    def _get_related_items(self):
+        return self.mapped("pricelist_item_ids")
+
+    def _update_assortment_items(self):
+        """
+        Update the pricelist with current assortment:
+        - Prepare values for new assorment items;
+        - Delete previous items.
+        - Create new assortments items;
+
+        :return: bool
+        """
+        self.ensure_one()
+        if not self.assortment_filter_id.active:
+            _logger.info(
+                "The assortment item %s is ignored because the "
+                "related assortment/filter is not active",
+                self.display_name,
+            )
+            return False
+        item_obj = self.env["product.pricelist.item"]
+        items_values = self._get_pricelist_item_values()
+        old_items = self._get_related_items()
+        old_items.unlink()
+        for item_value in items_values:
+            item_obj.create(item_value)
+        return True
